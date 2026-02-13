@@ -1,0 +1,18 @@
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --theme-bg: var(--color-cloud);
+  --theme-surface: var(--color-white);
+  --theme-text: var(--color-black);
+  --theme-text-muted: color-mix(in srgb, var(--color-black) 65%, var(--color-cloud));
+  --theme-border: color-mix(in srgb, var(--color-black) 12%, var(--color-cloud));
+  --theme-primary: var(--color-blue-500);
+  --theme-primary-strong: var(--color-blue-700);
+  --theme-primary-soft: var(--color-blue-200);
+  --theme-success: var(--color-olive-500);
+  --theme-warning: var(--color-amber-500);
+  --theme-danger: var(--color-amber-700);
+  --theme-shadow-soft: var(--box-shadow-md);
+  --theme-radius-md: var(--border-radius-md);
+  --theme-radius-lg: var(--border-radius-lg);
+}

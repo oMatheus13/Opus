@@ -1,0 +1,17 @@
+[data-theme="dark"] {
+  color-scheme: dark;
+  --theme-bg: var(--color-black);
+  --theme-surface: color-mix(in srgb, var(--color-black) 88%, var(--color-blue-900));
+  --theme-text: var(--color-cloud);
+  --theme-text-muted: color-mix(in srgb, var(--color-cloud) 70%, var(--color-black));
+  --theme-border: color-mix(in srgb, var(--color-cloud) 18%, var(--color-black));
+  --theme-primary: var(--color-blue-400);
+  --theme-primary-strong: var(--color-blue-300);
+  --theme-primary-soft: color-mix(in srgb, var(--color-blue-900) 60%, var(--color-black));
+  --theme-success: var(--color-olive-200);
+  --theme-warning: var(--color-amber-200);
+  --theme-danger: var(--color-amber-500);
+  --theme-shadow-soft: var(--box-shadow-md);
+  --theme-radius-md: var(--border-radius-md);
+  --theme-radius-lg: var(--border-radius-lg);
+}

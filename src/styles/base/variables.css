@@ -1,0 +1,170 @@
+:root {
+  /* ========================= */
+  /* OPUS NEUTRAL */
+  /* ========================= */
+  --color-cloud: #f0eee9; /* Branco de fundo do app e textos em fundo opus black */
+  --color-black: #181818; /* Preto de fundo do app e textos em fundo opus cloud */
+
+  --color-white: #fff; /* Branco puro de apoio */
+
+  /* ========================= */
+  /* OPUS BLUE SYSTEM */
+  /* ========================= */
+
+  /* Thin - quase invisivel, fundos extremamente suaves */
+  --color-blue-100: #e6e9fa;
+
+  /* Extra Light - fundo leve de badge, highlight discreto */
+  --color-blue-200: #cdd3f4;
+
+  /* Light - hover suave, detalhes pequenos */
+  --color-blue-300: #9fa9e6;
+
+  /* Regular Ligth - Para aplicar em fundos escuros no lugar da principal em fundos claros */
+  --color-blue-400: #7d8de0;
+
+  /* Regular - COR PRINCIPAL */
+  --color-blue-500: #5a6dbf;
+
+  /* Medium - estado ativo mais forte */
+  --color-blue-600: #4e5fad;
+
+  /* SemiBold - botao pressionado, foco */
+  --color-blue-700: #404e95;
+
+  /* Bold - estrutura, borda forte, destaque denso */
+  --color-blue-800: #333f7d;
+
+  /* ExtraBold - quase navy tecnico, fundo escuro premium */
+  --color-blue-900: #252f63;
+
+  /* ========================= */
+  /* OPUS OLIVA / POSITIVO */
+  /* ========================= */
+
+  /* Light - fundo suave de sucesso */
+  --color-olive-200: #a9c89c;
+
+  /* Regular - saldo positivo, progresso */
+  --color-olive-500: #4f6b3c;
+
+  /* Bold - destaque forte de meta atingida */
+  --color-olive-700: #34492a;
+
+  /* ========================= */
+  /* OPUS AMBAR / ACAO */
+  /* ========================= */
+
+  /* Light - aviso suave */
+  --color-amber-200: #f2c29a;
+
+  /* Regular - CTA secundario, alerta estrategico */
+  --color-amber-500: #e58a3a;
+
+  /* Bold - acao critica controlada */
+  --color-amber-700: #b96a24;
+
+  /* Typography */
+  --font-family-primary: "ClashDisplay";
+  --font-family-primary-variable: "ClashDisplay-Variable";
+  --font-family-secondary: "Archivo";
+  --font-family-secondary-variable: "Archivo-Variable";
+
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* Font sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 0.95rem;
+  --font-size-lg: 1.05rem;
+  --font-size-xl: 1.2rem;
+  --font-size-2xl: 1.45rem;
+  --font-size-3xl: 1.8rem;
+  --font-size-4xl: 2.2rem;
+  --font-size-5xl: 2.8rem;
+  --font-size-6xl: 3.4rem;
+  --font-size-7xl: 4rem;
+
+  --font-size-h1: var(--font-size-5xl);
+  --font-size-h2: var(--font-size-4xl);
+  --font-size-h3: var(--font-size-3xl);
+  --font-size-h4: var(--font-size-2xl);
+  --font-size-h5: var(--font-size-xl);
+  --font-size-h6: var(--font-size-lg);
+
+  /* Spacing */
+  --spacing-2xs: 0.25rem;
+  --spacing-xs: 0.4rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2.25rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4.5rem;
+  --spacing-4xl: 6rem;
+  --spacing-5xl: 9rem;
+
+  /* Layout */
+  --section-padding-y: var(--spacing-2xl);
+  --section-padding-x: var(--spacing-lg);
+  --container-max-width: 1200px;
+  --container-padding: var(--spacing-lg);
+
+  /* Borders & radius */
+  --border-radius-none: 0;
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 22px;
+  --border-radius-2xl: 28px;
+  --border-radius-full: 9999px;
+  --border-thin: 1px solid var(--color-line);
+
+  /* Bezel (chamfer) */
+  --bezel-xs: 6px;
+  --bezel-sm: 10px;
+  --bezel-md: 14px;
+  --bezel-lg: 18px;
+  --bezel-hi: rgba(255, 255, 255, 0.6);
+  --bezel-lo: rgba(15, 17, 22, 0.2);
+  --bezel-clip: polygon(
+    var(--bezel) 0,
+    100% 0,
+    100% calc(100% - var(--bezel)),
+    calc(100% - var(--bezel)) 100%,
+    0 100%,
+    0 var(--bezel)
+  );
+
+  /* Shadows */
+  --box-shadow-sm: 0 6px 16px rgba(15, 17, 22, 0.06);
+  --box-shadow-md: 0 12px 28px rgba(15, 17, 22, 0.08);
+  --box-shadow-lg: 0 18px 40px rgba(15, 17, 22, 0.12);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+
+  /* Z-Index */
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+  --z-index-header: 1080;
+  --z-index-modal: 1090;
+
+  /* Textures */
+  --texture-noise: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><defs><filter id="noise"><feTurbulence baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter></defs><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+  --texture-paper: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><defs><filter id="paper"><feTurbulence baseFrequency="0.035" numOctaves="4" seed="1"/></filter></defs><rect width="100%" height="100%" filter="url(%23paper)" opacity="0.04"/></svg>');
+}

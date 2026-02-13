@@ -1,0 +1,53 @@
+@font-face {
+  font-family: "ClashDisplay";
+  src: url("../../assets/fonts/clash-display/ClashDisplay-Variable.woff2") format("woff2"),
+    url("../../assets/fonts/clash-display/ClashDisplay-Variable.woff") format("woff");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ClashDisplay-Variable";
+  src: url("../../assets/fonts/clash-display/ClashDisplay-Variable.woff2") format("woff2"),
+    url("../../assets/fonts/clash-display/ClashDisplay-Variable.woff") format("woff");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo";
+  src: url("../../assets/fonts/archivo/Archivo-Variable.woff2") format("woff2"),
+    url("../../assets/fonts/archivo/Archivo-Variable.woff") format("woff");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo";
+  src: url("../../assets/fonts/archivo/Archivo-VariableItalic.woff2") format("woff2"),
+    url("../../assets/fonts/archivo/Archivo-VariableItalic.woff") format("woff");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo-Variable";
+  src: url("../../assets/fonts/archivo/Archivo-Variable.woff2") format("woff2"),
+    url("../../assets/fonts/archivo/Archivo-Variable.woff") format("woff");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo-Variable";
+  src: url("../../assets/fonts/archivo/Archivo-VariableItalic.woff2") format("woff2"),
+    url("../../assets/fonts/archivo/Archivo-VariableItalic.woff") format("woff");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}

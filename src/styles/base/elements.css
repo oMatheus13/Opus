@@ -1,0 +1,19 @@
+body {
+  min-height: 100vh;
+  font-family: var(--font-body), sans-serif;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}

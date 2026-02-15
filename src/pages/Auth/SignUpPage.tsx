@@ -7,11 +7,13 @@ type SignUpPageProps = {
   onSwitchMode: () => void;
 };
 
-const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
-  const { signUp } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
+    const { signUp } = useAuth();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,10 +22,23 @@ const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
     event.preventDefault();
     setErrorMessage(null);
     setSuccessMessage(null);
+
+    const trimmedEmail = email.trim();
+
+    if (!trimmedEmail) {
+      setErrorMessage("Informe seu email.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("As senhas nao conferem.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const { error } = await signUp({
-      email: email.trim(),
+      email: trimmedEmail,
       password
     });
 
@@ -38,9 +53,11 @@ const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
 
   return (
     <main className="auth">
-      <section className="auth__card">
+      <header className="auth__topbar">
         <img className="auth__logo" src={opusLogo} alt="Opus" />
+      </header>
 
+      <section className="auth__content">
         <form className="auth__form" onSubmit={handleSubmit}>
           <input
             id="signup-email"
@@ -56,7 +73,7 @@ const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
           <div className="auth__field">
             <input
               id="signup-password"
-              className="auth__input"
+              className="auth__input auth__input--with-toggle"
               type={showPassword ? "text" : "password"}
               placeholder="Senha"
               value={password}
@@ -77,6 +94,30 @@ const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
             </button>
           </div>
 
+          <div className="auth__field">
+            <input
+              id="signup-password-confirm"
+              className="auth__input auth__input--with-toggle"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirme a senha"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              autoComplete="new-password"
+              required
+            />
+            <button
+              className="auth__toggle"
+              type="button"
+              aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+              aria-pressed={showConfirmPassword}
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+            >
+              <span className="material-symbols-rounded" aria-hidden="true">
+                {showConfirmPassword ? "visibility_off" : "visibility"}
+              </span>
+            </button>
+          </div>
+
           {errorMessage ? (
             <p className="auth__status" role="alert">
               {errorMessage}
@@ -89,13 +130,15 @@ const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
             </p>
           ) : null}
 
-          <button
-            className="button button--primary button--block"
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Criando..." : "Criar conta"}
-          </button>
+          <div className="auth__actions">
+            <button
+              className="button button--primary button--block"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Criando..." : "Criar conta"}
+            </button>
+          </div>
         </form>
 
         <p className="auth__switch">

@@ -9,7 +9,9 @@ import {
 import type { AuthError, AuthResponse, Session, User } from "@supabase/supabase-js";
 import { authService } from "../services/authService";
 
-type AuthCredentials = {
+const DEV_SESSION_KEY = "opus.dev.session";
+
+type SignInCredentials = {
   email: string;
   password: string;
 };
@@ -18,8 +20,9 @@ type AuthContextValue = {
   session: Session | null;
   user: User | null;
   loading: boolean;
-  signIn: (credentials: AuthCredentials) => Promise<AuthResponse>;
-  signUp: (credentials: AuthCredentials) => Promise<AuthResponse>;
+  signIn: (credentials: SignInCredentials) => Promise<AuthResponse>;
+  signUp: (credentials: SignInCredentials) => Promise<AuthResponse>;
+  signInDev: () => void;
   signOut: () => Promise<{ error: AuthError | null }>;
 };
 
@@ -31,7 +34,24 @@ type AuthProviderProps = {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [devUser, setDevUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const isDev = import.meta.env.DEV;
+
+  const buildDevUser = (): User => {
+    const now = new Date().toISOString();
+
+    return {
+      id: "dev-user",
+      aud: "authenticated",
+      role: "authenticated",
+      email: "dev@opus.local",
+      app_metadata: { provider: "dev" },
+      user_metadata: { role: "dev" },
+      created_at: now,
+      updated_at: now
+    };
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -65,16 +85,49 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isDev) {
+      return;
+    }
+
+    if (localStorage.getItem(DEV_SESSION_KEY) === "1") {
+      setDevUser(buildDevUser());
+    }
+  }, [isDev]);
+
+  const signInDev = () => {
+    if (!isDev) {
+      return;
+    }
+
+    localStorage.setItem(DEV_SESSION_KEY, "1");
+    setDevUser(buildDevUser());
+  };
+
+  const signOut = async () => {
+    if (isDev) {
+      localStorage.removeItem(DEV_SESSION_KEY);
+      setDevUser(null);
+    }
+
+    if (isDev && devUser && !session) {
+      return { error: null };
+    }
+
+    return authService.signOut();
+  };
+
   const value = useMemo<AuthContextValue>(() => {
     return {
       session,
-      user: session?.user ?? null,
+      user: session?.user ?? devUser ?? null,
       loading,
       signIn: authService.signIn,
       signUp: authService.signUp,
-      signOut: authService.signOut
+      signInDev,
+      signOut
     };
-  }, [session, loading]);
+  }, [session, devUser, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -91,9 +91,10 @@ const SignInPage = ({ onSwitchMode }: SignInPageProps) => {
               aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
               aria-pressed={showPassword}
             >
-              <span className="material-symbols-rounded" aria-hidden="true">
-                {showPassword ? "visibility_off" : "visibility"}
-              </span>
+              <i
+                className={`fi fi-sr-${showPassword ? "eye" : "eye-lashes"}`}
+                aria-hidden="true"
+              />
             </button>
           </div>
 

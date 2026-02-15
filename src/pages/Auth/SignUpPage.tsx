@@ -88,9 +88,10 @@ type SignUpPageProps = {
               aria-pressed={showPassword}
               onClick={() => setShowPassword((prev) => !prev)}
             >
-              <span className="material-symbols-rounded" aria-hidden="true">
-                {showPassword ? "visibility_off" : "visibility"}
-              </span>
+              <i
+                className={`fi fi-sr-${showPassword ? "eye" : "eye-lashes"}`}
+                aria-hidden="true"
+              />
             </button>
           </div>
 
@@ -112,9 +113,10 @@ type SignUpPageProps = {
               aria-pressed={showConfirmPassword}
               onClick={() => setShowConfirmPassword((prev) => !prev)}
             >
-              <span className="material-symbols-rounded" aria-hidden="true">
-                {showConfirmPassword ? "visibility_off" : "visibility"}
-              </span>
+              <i
+                className={`fi fi-sr-${showConfirmPassword ? "eye" : "eye-lashes"}`}
+                aria-hidden="true"
+              />
             </button>
           </div>
 

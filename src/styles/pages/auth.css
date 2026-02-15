@@ -91,6 +91,11 @@
   font-size: 1.1rem;
 }
 
+.auth__toggle .fi {
+  font-size: 1rem;
+  line-height: 1;
+}
+
 .auth__forgot {
   align-self: flex-start;
   background: none;

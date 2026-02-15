@@ -53,7 +53,7 @@ const AppTopBar = ({
           title={maskData ? "Mostrar dados" : "Ocultar dados"}
         >
           <i
-            className={`fi fi-sr-${maskData ? "eye-lashes" : "eye"}`}
+            className={`fi fi-sr-${maskData ? "eye-crossed" : "eye"}`}
             aria-hidden="true"
           />
         </button>

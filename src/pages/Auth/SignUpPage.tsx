@@ -89,7 +89,7 @@ type SignUpPageProps = {
               onClick={() => setShowPassword((prev) => !prev)}
             >
               <i
-                className={`fi fi-sr-${showPassword ? "eye" : "eye-lashes"}`}
+                className={`fi fi-sr-${showPassword ? "eye" : "eye-crossed"}`}
                 aria-hidden="true"
               />
             </button>
@@ -114,7 +114,7 @@ type SignUpPageProps = {
               onClick={() => setShowConfirmPassword((prev) => !prev)}
             >
               <i
-                className={`fi fi-sr-${showConfirmPassword ? "eye" : "eye-lashes"}`}
+                className={`fi fi-sr-${showConfirmPassword ? "eye" : "eye-crossed"}`}
                 aria-hidden="true"
               />
             </button>

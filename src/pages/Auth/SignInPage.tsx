@@ -92,7 +92,7 @@ const SignInPage = ({ onSwitchMode }: SignInPageProps) => {
               aria-pressed={showPassword}
             >
               <i
-                className={`fi fi-sr-${showPassword ? "eye" : "eye-lashes"}`}
+                className={`fi fi-sr-${showPassword ? "eye" : "eye-crossed"}`}
                 aria-hidden="true"
               />
             </button>

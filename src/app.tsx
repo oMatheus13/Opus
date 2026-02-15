@@ -1,10 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import AppShell from "./layouts/AppShell";
 import SignInPage from "./pages/Auth/SignInPage";
 import SignUpPage from "./pages/Auth/SignUpPage";
 
 type AuthMode = "sign-in" | "sign-up";
+type ThemeMode = "light" | "dark";
+
+const getInitialTheme = (): ThemeMode => {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+
+  const stored = localStorage.getItem("opus.theme");
+  if (stored === "light" || stored === "dark") {
+    return stored;
+  }
+
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
 
 const AuthGate = () => {
   const { user } = useAuth();
@@ -22,6 +38,10 @@ const AuthGate = () => {
 };
 
 const App = () => {
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", getInitialTheme());
+  }, []);
+
   return (
     <AuthProvider>
       <AuthGate />

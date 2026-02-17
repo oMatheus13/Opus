@@ -1,36 +1,51 @@
-import type { MouseEventHandler } from "react";
+import { useRef } from "react";
+
+type DevDestination = "welcome" | "setup";
 
 type AppTopBarProps = {
   maskData: boolean;
   onToggleMask: () => void;
-  theme: "light" | "dark";
-  onToggleTheme: MouseEventHandler<HTMLButtonElement>;
-  onProfileClick?: () => void;
+  onSettingsClick?: () => void;
   greeting: string;
   displayName: string;
   avatarUrl?: string | null;
+  isDev?: boolean;
+  devDestination?: DevDestination | null;
+  onSelectDevDestination?: (destination: DevDestination) => void;
 };
 
 const AppTopBar = ({
   maskData,
   onToggleMask,
-  theme,
-  onToggleTheme,
-  onProfileClick,
+  onSettingsClick,
   greeting,
   displayName,
-  avatarUrl
+  avatarUrl,
+  isDev,
+  devDestination = null,
+  onSelectDevDestination
 }: AppTopBarProps) => {
-  const themeLabel = theme === "dark" ? "Ativar modo claro" : "Ativar modo escuro";
-  const themeIcon = theme === "dark" ? "sun" : "moon";
+  const devMenuRef = useRef<HTMLDetailsElement | null>(null);
+  const showDevMenu = Boolean(isDev && onSelectDevDestination);
+  const devOptions: Array<{ value: DevDestination; label: string }> = [
+    { value: "welcome", label: "Boas-vindas" },
+    { value: "setup", label: "Setup inicial" }
+  ];
+
+  const handleDevSelect = (destination: DevDestination) => {
+    onSelectDevDestination?.(destination);
+    if (devMenuRef.current) {
+      devMenuRef.current.removeAttribute("open");
+    }
+  };
 
   return (
     <header className="app-topbar app-glass">
       <button
-        className="app-topbar__profile"
+        className="app-topbar__settings"
         type="button"
-        title="Perfil"
-        onClick={onProfileClick}
+        title="Configurações"
+        onClick={onSettingsClick}
       >
         {avatarUrl ? (
           <img className="app-topbar__avatar" src={avatarUrl} alt={`Avatar de ${displayName}`} />
@@ -45,6 +60,32 @@ const AppTopBar = ({
         </div>
       </button>
       <div className="app-topbar__actions">
+        {showDevMenu ? (
+          <details className="app-topbar__dev" ref={devMenuRef}>
+            <summary
+              className="app-topbar__action"
+              title="Atalhos de dev"
+              aria-label="Atalhos de dev"
+            >
+              <i className="fi fi-sr-code-simple" aria-hidden="true" />
+            </summary>
+            <div className="app-topbar__dev-menu app-glass">
+              <p className="app-topbar__dev-title">Atalhos de dev</p>
+              {devOptions.map((option) => (
+                <button
+                  key={option.value}
+                  className={`app-topbar__dev-item${
+                    devDestination === option.value ? " is-active" : ""
+                  }`}
+                  type="button"
+                  onClick={() => handleDevSelect(option.value)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </details>
+        ) : null}
         <button
           className="app-topbar__action"
           type="button"
@@ -57,16 +98,7 @@ const AppTopBar = ({
             aria-hidden="true"
           />
         </button>
-        <button
-          className="app-topbar__action"
-          type="button"
-          onClick={onToggleTheme}
-          aria-pressed={theme === "dark"}
-          title={themeLabel}
-        >
-          <i className={`fi fi-sr-${themeIcon}`} aria-hidden="true" />
-        </button>
-        <button className="app-topbar__action" type="button" title="Notificacoes">
+        <button className="app-topbar__action" type="button" title="Notificações">
           <i className="fi fi-sr-bell" aria-hidden="true" />
         </button>
       </div>

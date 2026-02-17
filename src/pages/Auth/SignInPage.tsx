@@ -8,22 +8,24 @@ type SignInPageProps = {
 };
 
 const SignInPage = ({ onSwitchMode }: SignInPageProps) => {
-  const { signIn, signInDev } = useAuth();
+  const { signIn, signInDev, signInWithOtp, resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isDev = import.meta.env.DEV;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage(null);
+    setInfoMessage(null);
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail) {
-      setErrorMessage("Informe seu email.");
+      setErrorMessage("Informe seu e-mail.");
       return;
     }
 
@@ -47,11 +49,52 @@ const SignInPage = ({ onSwitchMode }: SignInPageProps) => {
 
   const handleDevLogin = () => {
     setErrorMessage(null);
+    setInfoMessage(null);
     signInDev();
   };
 
-  const handleForgotPassword = () => {
-    setErrorMessage("Recuperacao de senha em breve.");
+  const handleForgotPassword = async () => {
+    setErrorMessage(null);
+    setInfoMessage(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setErrorMessage("Informe seu e-mail para recuperar a senha.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const { error } = await resetPassword(trimmedEmail, window.location.origin);
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setInfoMessage("Enviamos um link de recuperação para o seu e-mail.");
+    }
+
+    setIsSubmitting(false);
+  };
+
+  const handleMagicLink = async () => {
+    setErrorMessage(null);
+    setInfoMessage(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setErrorMessage("Informe seu e-mail para receber o link.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const { error } = await signInWithOtp(trimmedEmail, window.location.origin);
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setInfoMessage("Link de acesso enviado. Confira seu e-mail.");
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -66,7 +109,7 @@ const SignInPage = ({ onSwitchMode }: SignInPageProps) => {
             id="signin-email"
             className="auth__input"
             type="email"
-            placeholder="Email"
+            placeholder="E-mail"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             autoComplete="email"
@@ -121,6 +164,12 @@ const SignInPage = ({ onSwitchMode }: SignInPageProps) => {
             </p>
           ) : null}
 
+          {infoMessage ? (
+            <p className="auth__status auth__status--success" role="status">
+              {infoMessage}
+            </p>
+          ) : null}
+
           <div className="auth__actions">
             <div className="auth__actions-row">
               <button
@@ -145,11 +194,19 @@ const SignInPage = ({ onSwitchMode }: SignInPageProps) => {
                 </button>
               ) : null}
             </div>
+            <button
+              className="button button--secondary button--block"
+              type="button"
+              onClick={handleMagicLink}
+              disabled={isSubmitting}
+            >
+              Enviar link de acesso
+            </button>
           </div>
         </form>
 
         <p className="auth__switch">
-          Nao tem uma conta?{" "}
+          Não tem uma conta?{" "}
           <button className="button button--link" type="button" onClick={onSwitchMode}>
             Criar conta
           </button>

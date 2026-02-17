@@ -1,37 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import type { MouseEventHandler, ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 import { useAuth } from "../hooks/useAuth";
-import AppNavBar from "./AppNavBar";
+import EmailVerificationBanner from "../components/EmailVerificationBanner";
+import AppNavDock from "./AppNavDock";
 import AppTopBar from "./AppTopBar";
 import HomePage from "../pages/Home/HomePage";
-import ProfilePage from "../pages/Profile/ProfilePage";
+import CreditoPage from "../pages/Credito/CreditoPage";
+import ConfiguracoesPage from "../pages/Configuracoes/ConfiguracoesPage";
+import SectionPlaceholder from "../pages/Sections/SectionPlaceholder";
+import WelcomePage from "../pages/Onboarding/WelcomePage";
+import SetupPage from "../pages/Onboarding/SetupPage";
+import { applyTheme, getInitialTheme, type ThemeMode } from "../utils/theme";
+import { applySkin, getInitialSkin, type SkinMode } from "../utils/skin";
+import { savePreOnboarding } from "../utils/onboarding";
+import { MAIN_NAV_ITEMS, type MainNavKey } from "./AppNavBar";
 
 type AppShellProps = {
   children?: ReactNode;
 };
 
-type ThemeMode = "light" | "dark";
+type DevView = "welcome" | "setup";
+type AppView = MainNavKey | "settings";
 
 const AppShell = ({ children }: AppShellProps) => {
   const [maskData, setMaskData] = useState(false);
-  const [activeView, setActiveView] = useState<"home" | "profile">("home");
+  const [activeView, setActiveView] = useState<AppView>("home");
+  const [devView, setDevView] = useState<DevView | null>(null);
   const { user } = useAuth();
+  const isDev = import.meta.env.DEV;
   const cleanupTimeoutRef = useRef<number | null>(null);
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") {
-      return "light";
-    }
-
-    const stored = localStorage.getItem("opus.theme");
-    if (stored === "light" || stored === "dark") {
-      return stored;
-    }
-
-    return window.matchMedia?.("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
+  const initialMaskRef = useRef(false);
+  const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
+  const [skin, setSkin] = useState<SkinMode>(() => getInitialSkin());
 
   const resolveDisplayName = (currentUser: User | null) => {
     const metadata = currentUser?.user_metadata as Record<string, unknown> | undefined;
@@ -48,7 +49,7 @@ const AppShell = ({ children }: AppShellProps) => {
       return currentUser.email.split("@")[0];
     }
 
-    return "Usuario";
+    return "Usuário";
   };
 
   const resolveGreeting = () => {
@@ -69,10 +70,15 @@ const AppShell = ({ children }: AppShellProps) => {
   const greeting = resolveGreeting();
   const avatarUrl = (user?.user_metadata as { avatar_url?: string } | undefined)
     ?.avatar_url;
+  const isEmailConfirmed = Boolean(user?.email_confirmed_at || user?.confirmed_at);
+  const isDevUser = (user?.app_metadata as { provider?: string } | undefined)?.provider === "dev";
 
-  const handleToggleTheme: MouseEventHandler<HTMLButtonElement> = () => {
+  const handleThemeChange = (nextTheme: ThemeMode) => {
+    if (nextTheme === theme) {
+      return;
+    }
+
     const root = document.documentElement;
-    const nextTheme = theme === "dark" ? "light" : "dark";
 
     if (cleanupTimeoutRef.current) {
       window.clearTimeout(cleanupTimeoutRef.current);
@@ -88,9 +94,30 @@ const AppShell = ({ children }: AppShellProps) => {
   };
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("opus.theme", theme);
+    applyTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    applySkin(skin);
+  }, [skin]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    const metadata = user.user_metadata as Record<string, unknown> | undefined;
+    const storedTheme = metadata?.theme;
+    const storedSkin = metadata?.skin;
+
+    if ((storedTheme === "light" || storedTheme === "dark") && storedTheme !== theme) {
+      setTheme(storedTheme);
+    }
+
+    if ((storedSkin === "clean" || storedSkin === "glass") && storedSkin !== skin) {
+      setSkin(storedSkin);
+    }
+  }, [user, theme, skin]);
 
   useEffect(() => {
     return () => {
@@ -100,37 +127,129 @@ const AppShell = ({ children }: AppShellProps) => {
     };
   }, []);
 
-  const handleProfileClick = () => {
-    setActiveView((prev) => (prev === "profile" ? "home" : "profile"));
+  useEffect(() => {
+    if (!user || initialMaskRef.current) {
+      return;
+    }
+
+    const metadata = user.user_metadata as Record<string, unknown> | undefined;
+    if (metadata?.privacy_masked) {
+      setMaskData(true);
+    }
+
+    initialMaskRef.current = true;
+  }, [user]);
+
+  const handleSettingsClick = () => {
+    setActiveView((prev) => (prev === "settings" ? "home" : "settings"));
   };
 
-  const content =
-    activeView === "profile" ? (
-      <ProfilePage
-        displayName={displayName}
-        email={user?.email ?? ""}
-        onClose={() => setActiveView("home")}
+  const isMainView = MAIN_NAV_ITEMS.some((item) => item.key === activeView);
+  const activeNavKey = isMainView ? (activeView as MainNavKey) : null;
+  const contextMap: Record<string, { label: string; icon: string }> = {
+    settings: { label: "Configurações", icon: "settings" }
+  };
+  const contextData = !isMainView
+    ? contextMap[activeView] ?? { label: "Detalhes", icon: "apps" }
+    : null;
+
+  const handleDevNavigate = (next: DevView) => {
+    setDevView(next);
+  };
+
+  if (devView === "welcome") {
+    return (
+      <WelcomePage
+        onComplete={(data) => {
+          savePreOnboarding(data);
+          if (data.theme) {
+            applyTheme(data.theme);
+            setTheme(data.theme);
+          }
+          setDevView(null);
+        }}
+        onExit={() => {
+          setDevView(null);
+          setTheme(getInitialTheme());
+        }}
+        showExit={isDev}
       />
-    ) : (
-      children ?? <HomePage />
     );
+  }
+
+  if (devView === "setup") {
+    return (
+      <SetupPage
+        onComplete={() => setDevView(null)}
+        onExit={() => {
+          setDevView(null);
+          setTheme(getInitialTheme());
+        }}
+        showExit={isDev}
+      />
+    );
+  }
+
+  const renderContent = () => {
+    switch (activeView) {
+      case "settings":
+        return (
+          <ConfiguracoesPage
+            displayName={displayName}
+            email={user?.email ?? ""}
+            theme={theme}
+            skin={skin}
+            onThemeChange={handleThemeChange}
+            onSkinChange={setSkin}
+          />
+        );
+      case "credit":
+        return <CreditoPage />;
+      case "investments":
+        return <SectionPlaceholder icon="chart-line-up" text="Investimentos em breve." />;
+      case "purchases":
+        return <SectionPlaceholder icon="shopping-cart" text="Compras em breve." />;
+      case "more":
+        return <SectionPlaceholder icon="apps" text="Mais opções em breve." />;
+      case "home":
+      default:
+        return children ?? <HomePage />;
+    }
+  };
 
   return (
-    <main className="app-shell" data-privacy={maskData ? "masked" : "open"}>
+    <main
+      className="app-shell"
+      data-privacy={maskData ? "masked" : "open"}
+      data-skin={skin}
+    >
       <AppTopBar
         maskData={maskData}
         onToggleMask={() => setMaskData((prev) => !prev)}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-        onProfileClick={handleProfileClick}
+        onSettingsClick={handleSettingsClick}
         displayName={displayName}
         greeting={greeting}
         avatarUrl={avatarUrl}
+        isDev={isDev}
+        devDestination={devView}
+        onSelectDevDestination={handleDevNavigate}
       />
 
-      <section className="app-content">{content}</section>
+      <EmailVerificationBanner
+        email={user?.email}
+        isConfirmed={isEmailConfirmed}
+        isDev={isDevUser}
+      />
 
-      <AppNavBar />
+      <section className="app-content">{renderContent()}</section>
+
+      <AppNavDock
+        contextLabel={contextData?.label ?? ""}
+        contextIcon={contextData?.icon ?? "apps"}
+        showContext={!isMainView}
+        activeKey={activeNavKey}
+        onSelect={(key) => setActiveView(key)}
+      />
     </main>
   );
 };

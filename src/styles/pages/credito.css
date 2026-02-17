@@ -1,0 +1,412 @@
+.credito {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.credito__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.credito__cards-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.credito__eyebrow {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.credito__hint {
+  margin: var(--spacing-3xs) 0 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-muted);
+}
+
+.credito__stack {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(220px, 34vw, 320px);
+  gap: var(--spacing-md);
+  --card-drag-offset: 0px;
+}
+
+.credito__stack.is-dragging .credito__card--top {
+  transition: none;
+}
+
+.credito__stack.is-switching .credito__card--top {
+  transform: translateY(90px) scale(0.96);
+  opacity: 0;
+}
+
+.credito__stack.is-switching .credito__card--back {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.credito__card {
+  width: min(420px, 100%);
+  aspect-ratio: 1.586;
+  border-radius: var(--border-radius-xl);
+  padding: clamp(1rem, 2.4vw, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--color-cloud);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-black) 18%, transparent);
+  box-shadow: var(--box-shadow-md);
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.credito__card > * {
+  position: relative;
+  z-index: 1;
+}
+[data-theme="light"] .credito__card {
+  color: var(--color-cloud);
+}
+
+[data-theme="dark"] .credito__card {
+  color: var(--color-cloud);
+}
+
+.credito__card--top {
+  z-index: 2;
+  transform: translateY(var(--card-drag-offset)) scale(1);
+  touch-action: none;
+}
+
+.credito__card--back {
+  z-index: 1;
+  transform: translateY(18px) scale(0.94);
+  opacity: 0.88;
+}
+
+.credito__card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.credito__card-bank {
+  height: 26px;
+  width: auto;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+}
+
+.credito__card-brand {
+  height: 24px;
+  width: auto;
+}
+
+.credito__card-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--color-cloud);
+}
+
+.credito__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+}
+
+.credito__card-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+}
+
+.credito__card-value {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: var(--font-weight-medium);
+}
+
+.credito__card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  opacity: 0.85;
+}
+
+.credito__card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  opacity: 0.85;
+}
+
+.credito__card-number {
+  letter-spacing: 0.16em;
+}
+
+.credito__card-bank-name {
+  font-weight: var(--font-weight-medium);
+}
+
+.credito__card--skin-aurora {
+  background:
+    radial-gradient(circle at 20% 20%, var(--card-tone-2), transparent 48%),
+    radial-gradient(circle at 90% 10%, var(--card-tone-3), transparent 50%),
+    linear-gradient(140deg, var(--card-tone-1), var(--card-tone-2));
+}
+
+.credito__card--skin-ripple {
+  background:
+    radial-gradient(circle at 70% 30%, var(--card-tone-1), transparent 45%),
+    radial-gradient(circle at 20% 80%, var(--card-tone-3), transparent 60%),
+    linear-gradient(160deg, var(--card-tone-2), var(--card-tone-1));
+}
+
+.credito__card--skin-stack {
+  background:
+    linear-gradient(135deg, var(--card-tone-1), var(--card-tone-3)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+}
+
+.credito__card--skin-stack::after {
+  content: "";
+  position: absolute;
+  inset: 18% 8% auto auto;
+  width: 160px;
+  height: 160px;
+  border-radius: 40px;
+  background: color-mix(in srgb, var(--card-tone-2) 85%, transparent);
+  opacity: 0.55;
+}
+
+.credito__card--skin-stack::before {
+  content: "";
+  position: absolute;
+  inset: auto auto 14% 8%;
+  width: 120px;
+  height: 120px;
+  border-radius: 32px;
+  background: color-mix(in srgb, var(--card-tone-2) 75%, transparent);
+  opacity: 0.5;
+}
+
+.credito__card--tone-blue {
+  --card-tone-1: var(--color-blue-600);
+  --card-tone-2: var(--color-blue-500);
+  --card-tone-3: var(--color-blue-800);
+}
+
+.credito__card--tone-olive {
+  --card-tone-1: var(--color-olive-500);
+  --card-tone-2: var(--color-olive-200);
+  --card-tone-3: var(--color-olive-700);
+}
+
+.credito__card--tone-amber {
+  --card-tone-1: var(--color-amber-500);
+  --card-tone-2: var(--color-amber-200);
+  --card-tone-3: var(--color-amber-700);
+}
+
+[data-theme="dark"] .credito__card--tone-blue {
+  --card-tone-1: var(--color-blue-400);
+  --card-tone-2: var(--color-blue-500);
+  --card-tone-3: var(--color-blue-700);
+}
+
+[data-theme="dark"] .credito__card--tone-olive {
+  --card-tone-1: var(--color-olive-200);
+  --card-tone-2: var(--color-olive-500);
+  --card-tone-3: var(--color-olive-700);
+}
+
+[data-theme="dark"] .credito__card--tone-amber {
+  --card-tone-1: var(--color-amber-200);
+  --card-tone-2: var(--color-amber-500);
+  --card-tone-3: var(--color-amber-700);
+}
+
+.credito__empty {
+  width: min(420px, 100%);
+  aspect-ratio: 1.586;
+  border-radius: var(--border-radius-xl);
+  border: 1px dashed color-mix(in srgb, var(--color-border) 70%, transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  color: var(--color-muted);
+  text-align: center;
+  padding: var(--spacing-lg);
+}
+
+.credito__actions {
+  margin-top: var(--spacing-sm);
+  --credito-action-gap: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--credito-action-gap);
+  position: relative;
+  isolation: isolate;
+}
+
+.credito__actions--metaball .credito__actions-goo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--credito-action-gap);
+  filter: blur(14px) contrast(18);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.credito__action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-blue-200) 40%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 80%, transparent);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  z-index: 1;
+}
+
+.credito__action::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--color-blue-200) 55%, transparent);
+  filter: blur(16px);
+  opacity: 0.65;
+  z-index: -1;
+}
+
+.credito__action--icon {
+  padding: 0.6rem;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+.credito__action--ghost {
+  border: none;
+  background: color-mix(in srgb, var(--color-accent-soft) 80%, transparent);
+  box-shadow: none;
+  cursor: default;
+  color: transparent;
+}
+
+.credito__action--ghost::after {
+  content: none;
+}
+
+.credito__action--ghost > * {
+  visibility: hidden;
+}
+
+.credito__action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(90, 109, 191, 0.18);
+}
+
+.credito__action .fi {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.credito__register {
+  padding-top: var(--spacing-md);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+}
+
+.credito__group {
+  padding-bottom: var(--spacing-2xs);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+}
+
+.credito__select {
+  appearance: none;
+  background: transparent;
+}
+
+.app-shell[data-skin="clean"] .credito__actions--metaball .credito__actions-goo {
+  display: none;
+}
+
+.app-shell[data-skin="clean"] .credito__action {
+  border: none;
+  background: var(--color-surface);
+  box-shadow: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.app-shell[data-skin="clean"] .credito__action::after {
+  content: none;
+}
+
+.app-shell[data-skin="clean"] .credito__action:hover {
+  transform: none;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--color-surface) 85%, var(--color-accent-soft));
+}
+
+@media (max-width: 720px) {
+  .credito__card {
+    width: min(360px, 100%);
+  }
+
+  .credito__actions {
+    flex-wrap: nowrap;
+  }
+
+  .credito__action {
+    flex: 1 1 0;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    font-size: var(--font-size-xs);
+    min-width: 0;
+  }
+
+  .credito__action--icon {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+}

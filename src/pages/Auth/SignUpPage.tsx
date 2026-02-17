@@ -7,11 +7,12 @@ type SignUpPageProps = {
   onSwitchMode: () => void;
 };
 
-  const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
-    const { signUp } = useAuth();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+const SignUpPage = ({ onSwitchMode }: SignUpPageProps) => {
+  const { signUp } = useAuth();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -23,29 +24,45 @@ type SignUpPageProps = {
     setErrorMessage(null);
     setSuccessMessage(null);
 
+    const trimmedFullName = fullName.trim();
     const trimmedEmail = email.trim();
 
+    if (!trimmedFullName) {
+      setErrorMessage("Informe seu nome completo.");
+      return;
+    }
+
     if (!trimmedEmail) {
-      setErrorMessage("Informe seu email.");
+      setErrorMessage("Informe seu e-mail.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMessage("As senhas nao conferem.");
+      setErrorMessage("As senhas não conferem.");
       return;
     }
 
     setIsSubmitting(true);
 
+    const nameParts = trimmedFullName.split(/\s+/);
+    const firstName = nameParts[0] ?? "";
+    const lastName = nameParts.slice(1).join(" ");
+
     const { error } = await signUp({
       email: trimmedEmail,
-      password
+      password,
+      data: {
+        name: firstName,
+        first_name: firstName,
+        last_name: lastName,
+        full_name: trimmedFullName
+      }
     });
 
     if (error) {
       setErrorMessage(error.message);
     } else {
-      setSuccessMessage("Conta criada. Verifique seu email para confirmar.");
+      setSuccessMessage("Conta criada. Você pode confirmar o e-mail depois.");
     }
 
     setIsSubmitting(false);
@@ -60,10 +77,21 @@ type SignUpPageProps = {
       <section className="auth__content">
         <form className="auth__form" onSubmit={handleSubmit}>
           <input
+            id="signup-full-name"
+            className="auth__input"
+            type="text"
+            placeholder="Nome completo"
+            value={fullName}
+            onChange={(event) => setFullName(event.target.value)}
+            autoComplete="name"
+            required
+          />
+
+          <input
             id="signup-email"
             className="auth__input"
             type="email"
-            placeholder="Email"
+            placeholder="E-mail"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             autoComplete="email"
@@ -144,7 +172,7 @@ type SignUpPageProps = {
         </form>
 
         <p className="auth__switch">
-          Ja tem conta?{" "}
+          Já tem conta?{" "}
           <button className="button button--link" type="button" onClick={onSwitchMode}>
             Entrar
           </button>

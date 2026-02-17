@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60" height="60" viewBox="32438 1669 60 60" fill="none"><defs><linearGradient id="paint30_linear_1_54" x1="32468.5" y1="1679.92" x2="32468.5" y2="1718.77" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00E96A" />
+<stop offset="1" stop-color="#24847F" />
+</linearGradient>
+<linearGradient id="paint31_linear_1_54" x1="32468.5" y1="1679.92" x2="32468.5" y2="1718.77" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00E96A" />
+<stop offset="1" stop-color="#24847F" />
+</linearGradient>
+</defs><g id="Type=Icon, Background=True_107">
+<rect width="60" height="60" transform="translate(32438 1669)" fill="#1D1D1B" />
+<g id="Group 10994_2">
+<path id="Vector_1226" d="M32467.6 1688.53L32460.7 1693.51V1679.92L32467.6 1688.53Z" fill="url(#paint30_linear_1_54)" />
+<path id="Vector_1227" d="M32452.9 1703.58V1702.16C32452.9 1700.38 32453.8 1698.7 32455.1 1697.61L32455.2 1697.52C32456.3 1696.71 32457.5 1696.26 32458.9 1696.26H32461.5L32484 1679.94C32484 1685.44 32481.4 1690.59 32476.9 1693.83L32469 1699.58C32468.7 1699.82 32468.5 1700.23 32468.5 1700.66C32468.5 1701.73 32469.7 1702.37 32470.6 1701.73L32484 1691.96C32484 1697.5 32481.4 1702.7 32476.9 1705.94L32472.4 1709.24V1718.77L32458.7 1701.54C32458 1700.68 32456.8 1700.55 32455.9 1701.22L32452.9 1703.58Z" fill="url(#paint31_linear_1_54)" />
+</g>
+</g>
+</svg>

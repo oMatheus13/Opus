@@ -1,0 +1,38 @@
+:root,
+[data-skin="clean"] {
+  --glass-bg: var(--color-surface);
+  --glass-border: none;
+  --glass-highlight: transparent;
+  --glass-shadow: none;
+  --glass-inner-shadow: none;
+  --glass-blur: 0px;
+  --glass-saturation: 100%;
+  --app-bar-bg: var(--color-black);
+  --app-bar-text: var(--color-cloud);
+}
+
+[data-theme="dark"][data-skin="clean"] {
+  --app-bar-bg: var(--color-cloud);
+  --app-bar-text: var(--color-black);
+}
+
+html[data-theme="dark"] .app-shell[data-skin="clean"] {
+  --app-bar-bg: var(--color-cloud);
+  --app-bar-text: var(--color-black);
+}
+
+[data-skin="glass"] {
+  --glass-bg: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-surface) 52%, transparent),
+    transparent 120%
+  );
+  --glass-border: 1px solid color-mix(in srgb, var(--color-border) 38%, transparent);
+  --glass-highlight: color-mix(in srgb, var(--color-surface) 58%, transparent);
+  --glass-shadow: 0 18px 40px rgba(8, 10, 14, 0.12);
+  --glass-inner-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  --glass-blur: 18px;
+  --glass-saturation: 150%;
+  --app-bar-bg: var(--glass-bg);
+  --app-bar-text: var(--color-text);
+}

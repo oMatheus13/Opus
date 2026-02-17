@@ -7,19 +7,56 @@
   padding-bottom: calc(var(--spacing-4xl) + 72px);
   background: var(--color-bg);
   color: var(--color-text);
-  --glass-bg: color-mix(in srgb, var(--color-surface) 78%, transparent);
-  --glass-border: color-mix(in srgb, var(--color-border) 60%, transparent);
-  --glass-highlight: color-mix(in srgb, var(--color-surface) 75%, transparent);
-  --glass-shadow: 0 18px 40px rgba(8, 10, 14, 0.12);
+  position: relative;
+  isolation: isolate;
+}
+
+.sensitive {
+  transition: filter 160ms ease;
+}
+
+.app-shell[data-privacy="masked"] .sensitive {
+  filter: blur(8px);
+}
+
+.app-shell[data-skin="glass"]::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      color-mix(in srgb, var(--color-accent-soft) 60%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 85% 0%,
+      color-mix(in srgb, var(--color-accent) 22%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 15% 85%,
+      color-mix(in srgb, var(--color-accent) 18%, transparent),
+      transparent 62%
+    );
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-topbar,
+.app-content {
+  position: relative;
+  z-index: 1;
 }
 
 .app-glass {
   position: relative;
-  background: linear-gradient(135deg, var(--glass-bg), transparent 120%);
-  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  border: var(--glass-border);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   overflow: hidden;
 }
 
@@ -27,12 +64,14 @@
   content: "";
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background: radial-gradient(
-    circle at 15% 0%,
+    circle at 25% 15%,
     var(--glass-highlight),
     transparent 60%
   );
-  opacity: 0.75;
+  opacity: 0.4;
+  filter: blur(8px);
   pointer-events: none;
 }
 
@@ -41,7 +80,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  box-shadow: var(--glass-inner-shadow);
   pointer-events: none;
 }
 
@@ -57,9 +96,66 @@
   gap: var(--spacing-md);
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
+  overflow: visible;
+  z-index: 15;
+  position: sticky;
+  top: var(--spacing-lg);
 }
 
-.app-topbar__profile {
+.app-shell[data-skin="clean"] .app-topbar,
+.app-shell[data-skin="clean"] .app-nav {
+  background: var(--app-bar-bg);
+  color: var(--app-bar-text);
+  border: none;
+  box-shadow: none;
+}
+
+.app-shell[data-skin="clean"] .app-nav__item {
+  color: color-mix(in srgb, var(--app-bar-text) 70%, var(--app-bar-bg));
+}
+
+.app-shell[data-skin="clean"] .app-nav__item:hover {
+  color: var(--app-bar-text);
+  background: color-mix(in srgb, var(--app-bar-text) 12%, var(--app-bar-bg));
+}
+
+.app-shell[data-skin="clean"] .app-nav__item.is-active,
+.app-shell[data-skin="clean"] .app-nav__item--static.is-active {
+  color: var(--app-bar-text);
+  box-shadow: none;
+}
+
+.app-shell[data-skin="clean"] .app-nav__item.is-active {
+  background: none;
+}
+
+.app-shell[data-skin="clean"] .app-nav__item--static.is-active {
+  background: color-mix(in srgb, var(--app-bar-text) 12%, var(--app-bar-bg));
+}
+
+.app-shell[data-skin="clean"] .app-nav__indicator {
+  background: var(--color-accent);
+  border: none;
+  box-shadow: none;
+}
+
+.app-shell[data-skin="clean"] .app-nav__indicator::after {
+  opacity: 0;
+}
+
+.app-shell[data-skin="clean"] .app-topbar__action {
+  background: color-mix(in srgb, var(--app-bar-text) 12%, var(--app-bar-bg));
+  color: var(--app-bar-text);
+  border: none;
+  box-shadow: none;
+}
+
+.app-shell[data-skin="clean"] .app-topbar__action:hover {
+  background: color-mix(in srgb, var(--app-bar-text) 18%, var(--app-bar-bg));
+  border-color: transparent;
+}
+
+.app-topbar__settings {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -72,7 +168,7 @@
   cursor: pointer;
 }
 
-.app-topbar__profile:focus-visible {
+.app-topbar__settings:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;
   border-radius: var(--border-radius-lg);
@@ -82,7 +178,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--color-border);
   object-fit: cover;
 }
 
@@ -119,6 +215,71 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+.app-topbar__dev {
+  position: relative;
+}
+
+.app-topbar__dev summary {
+  list-style: none;
+}
+
+.app-topbar__dev summary::-webkit-details-marker {
+  display: none;
+}
+
+.app-topbar__dev summary::marker {
+  content: "";
+}
+
+.app-topbar__dev-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  min-width: 200px;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-lg);
+  display: grid;
+  gap: var(--spacing-2xs);
+  z-index: 30;
+}
+
+.app-topbar__dev-title {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-muted);
+}
+
+.app-topbar__dev-item {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text);
+  padding: 0.4rem 0.55rem;
+  border-radius: var(--border-radius-sm);
+  text-align: left;
+  font: inherit;
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.app-topbar__dev-item:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-border);
+}
+
+.app-topbar__dev-item.is-active {
+  background: var(--color-accent-soft);
+  border-color: var(--color-border);
+}
+
+.app-topbar__dev-separator {
+  height: 1px;
+  background: var(--color-border);
+  opacity: 0.6;
+  margin: var(--spacing-3xs) 0;
 }
 
 .app-topbar__action {
@@ -162,18 +323,70 @@
   color: var(--color-muted);
 }
 
-.app-nav {
+.app-dock {
   position: fixed;
-  left: 50%;
+  left: 0;
+  right: 0;
   bottom: var(--spacing-lg);
-  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: 0 var(--spacing-lg);
+  z-index: 12;
+  pointer-events: none;
+}
+
+.app-nav {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   padding: 0.4rem 0.6rem;
   border-radius: 999px;
-  z-index: 10;
   overflow: visible;
+  pointer-events: auto;
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.app-nav--context {
+  justify-self: end;
+}
+
+.app-nav--main {
+  justify-self: center;
+}
+
+.app-nav--shortcut {
+  justify-self: start;
+}
+
+.app-dock[data-context="inactive"] .app-nav--context {
+  opacity: 0;
+  transform: translateY(8px) scale(0.96);
+  pointer-events: none;
+  animation: dock-pop-out 240ms ease both;
+}
+
+.app-dock[data-context="active"] .app-nav--context {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  animation: dock-pop-in 420ms cubic-bezier(0.18, 0.9, 0.22, 1) both;
+}
+
+.app-dock[data-shortcut="inactive"] .app-nav--shortcut {
+  opacity: 0;
+  transform: translateY(8px) scale(0.96);
+  pointer-events: none;
+  animation: dock-pop-out 240ms ease both;
+}
+
+.app-dock[data-shortcut="active"] .app-nav--shortcut {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  animation: dock-pop-in 420ms cubic-bezier(0.18, 0.9, 0.22, 1) both;
 }
 
 .app-nav__indicator {
@@ -182,13 +395,19 @@
   bottom: 6px;
   left: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-accent-soft) 70%, transparent);
-  box-shadow: 0 10px 22px rgba(90, 109, 191, 0.25);
+  background: color-mix(in srgb, var(--color-accent) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 60%, transparent);
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--color-accent) 45%, transparent);
   transition:
     transform 520ms cubic-bezier(0.18, 0.9, 0.22, 1),
     width 520ms cubic-bezier(0.18, 0.9, 0.22, 1);
   pointer-events: none;
   z-index: 0;
+}
+
+.app-nav__indicator.is-hidden {
+  opacity: 0;
+  width: 0;
 }
 
 .app-nav__indicator::after {
@@ -197,8 +416,8 @@
   inset: -6px;
   border-radius: inherit;
   background: inherit;
-  opacity: 0.6;
-  filter: blur(12px);
+  opacity: 0.9;
+  filter: blur(14px);
   transition: inherit;
 }
 
@@ -230,11 +449,66 @@
 
 .app-nav__item:hover {
   color: var(--color-text);
-  background: color-mix(in srgb, var(--color-accent-soft) 45%, transparent);
+  background: none;
 }
 
 .app-nav__item.is-active {
-  color: var(--color-text);
+  color: var(--color-white);
+}
+
+.app-nav__item--static {
+  cursor: default;
+}
+
+.app-nav__item--static:hover {
+  background: none;
+}
+
+.app-nav__item--static.is-active {
+  color: var(--color-white);
+  background: color-mix(in srgb, var(--color-accent) 72%, transparent);
+  box-shadow:
+    0 14px 30px color-mix(in srgb, var(--color-accent) 45%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 60%, transparent);
+}
+
+.app-dock[data-context="active"] .app-nav--context .app-nav__item--static::after {
+  content: none;
+}
+
+@keyframes dock-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dock-pop-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+}
+
+[data-theme="light"] .app-nav__item {
+  color: color-mix(in srgb, var(--color-text) 78%, var(--color-muted));
+}
+
+[data-theme="light"] .app-nav__item.is-active,
+[data-theme="light"] .app-nav__item--static.is-active {
+  color: var(--color-white);
 }
 
 @media (max-width: 720px) {
@@ -260,11 +534,18 @@
     height: 36px;
   }
 
-  .app-nav {
-    width: calc(100% - (2 * var(--spacing-md)));
-    justify-content: space-between;
-    gap: var(--spacing-xs);
-    padding: 0.35rem 0.45rem;
+  .app-dock {
+    grid-template-columns: 1fr;
+    padding: 0 var(--spacing-md);
+  }
+
+  .app-nav--context,
+  .app-nav--shortcut {
+    display: none;
+  }
+
+  .app-nav--main {
+    width: 100%;
   }
 
   .app-nav__item {

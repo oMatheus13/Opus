@@ -1,0 +1,17 @@
+.section-placeholder {
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  text-align: center;
+  min-height: 220px;
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+}
+
+.section-placeholder .fi {
+  font-size: 1.1rem;
+  line-height: 1;
+}

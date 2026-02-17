@@ -1,6 +1,7 @@
 @import "./theme-light.css";
 @import "./theme-dark.css";
 @import "./token.css";
+@import "./skin.css";
 
 @media (prefers-reduced-motion: no-preference) {
   html.theme-transition,

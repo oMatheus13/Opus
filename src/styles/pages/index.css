@@ -1,6 +1,9 @@
 @import "./auth.css";
 @import "./home.css";
-@import "./profile.css";
+@import "./credito.css";
+@import "./onboarding.css";
+@import "./configuracoes.css";
+@import "./sections.css";
 @import "./dashboard.css";
 @import "./users.css";
 @import "./prodcuts.css";

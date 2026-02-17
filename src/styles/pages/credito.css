@@ -12,56 +12,91 @@
   gap: var(--spacing-lg);
 }
 
-.credito__cards-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-  flex-wrap: wrap;
-}
-
-.credito__eyebrow {
-  margin: 0;
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.credito__hint {
-  margin: var(--spacing-3xs) 0 0;
-  font-size: var(--font-size-xs);
-  color: var(--color-muted);
-}
-
 .credito__stack {
   position: relative;
   display: grid;
+  grid-template-areas: "stack";
   place-items: center;
   min-height: clamp(220px, 34vw, 320px);
-  gap: var(--spacing-md);
   --card-drag-offset: 0px;
+  --card-stack-offset: 40px;
 }
 
-.credito__stack.is-dragging .credito__card--top {
+.credito__stack.is-dragging .credito__card-wrap--active {
   transition: none;
 }
 
-.credito__stack.is-switching .credito__card--top {
-  transform: translateY(90px) scale(0.96);
-  opacity: 0;
+.credito__stack.is-vertical .credito__card-wrap--active {
+  transform: translateY(var(--card-drag-offset)) scale(1);
 }
 
-.credito__stack.is-switching .credito__card--back {
-  transform: translateY(0) scale(1);
-  opacity: 1;
+.credito__stack.is-horizontal .credito__card-wrap--active {
+  transform: translateX(var(--card-drag-offset)) scale(1);
+}
+
+.credito__stack.is-vertical .credito__card-wrap--prev {
+  transform: translateY(calc(var(--card-stack-offset) * var(--stack-depth, 1) * -1))
+    scale(var(--stack-scale, 0.96));
+}
+
+.credito__stack.is-horizontal .credito__card-wrap--prev {
+  transform: translateX(calc(var(--card-stack-offset) * var(--stack-depth, 1) * -1))
+    scale(var(--stack-scale, 0.96));
+}
+
+.credito__stack.is-vertical .credito__card-wrap--next {
+  transform: translateY(calc(var(--card-stack-offset) * var(--stack-depth, 1)))
+    scale(var(--stack-scale, 0.96));
+}
+
+.credito__stack.is-horizontal .credito__card-wrap--next {
+  transform: translateX(calc(var(--card-stack-offset) * var(--stack-depth, 1)))
+    scale(var(--stack-scale, 0.96));
+}
+
+.credito__card-wrap {
+  grid-area: stack;
+  width: min(420px, 100%);
+  aspect-ratio: 1.586;
+  position: relative;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  border: none;
+  padding: 0;
+  background: none;
+  font: inherit;
+}
+
+.credito__card-wrap--clickable {
+  cursor: pointer;
+}
+
+.credito__card-wrap--clickable:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 6px;
+  border-radius: var(--border-radius-md);
+}
+
+.credito__card-wrap--active {
+  z-index: 3;
+  touch-action: none;
+}
+
+.credito__card-wrap--prev,
+.credito__card-wrap--next {
+  z-index: 2;
+  opacity: var(--stack-opacity, 0.94);
+  pointer-events: none;
+}
+
+.credito__card-wrap--next {
+  z-index: 1;
 }
 
 .credito__card {
-  width: min(420px, 100%);
-  aspect-ratio: 1.586;
-  border-radius: var(--border-radius-xl);
-  padding: clamp(1rem, 2.4vw, 1.5rem);
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-md);
+  padding: clamp(1rem, 2.2vw, 1.4rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -70,76 +105,134 @@
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--color-black) 18%, transparent);
   box-shadow: var(--box-shadow-md);
-  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
 .credito__card > * {
   position: relative;
   z-index: 1;
 }
-[data-theme="light"] .credito__card {
-  color: var(--color-cloud);
-}
 
-[data-theme="dark"] .credito__card {
-  color: var(--color-cloud);
-}
-
-.credito__card--top {
-  z-index: 2;
-  transform: translateY(var(--card-drag-offset)) scale(1);
-  touch-action: none;
-}
-
-.credito__card--back {
-  z-index: 1;
-  transform: translateY(18px) scale(0.94);
-  opacity: 0.88;
-}
-
-.credito__card-header {
-  display: flex;
+.credito__card-bank,
+.credito__card-brand {
+  position: absolute;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-sm);
+  gap: 0.4rem;
+}
+
+.credito__card-bank--edit,
+.credito__card-brand--edit {
+  padding: 0.15rem;
 }
 
 .credito__card-bank {
-  height: 26px;
-  width: auto;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  top: clamp(0.8rem, 1.4vw, 1rem);
+  left: clamp(0.8rem, 1.4vw, 1rem);
 }
 
 .credito__card-brand {
-  height: 24px;
+  bottom: clamp(0.8rem, 1.4vw, 1rem);
+  right: clamp(0.8rem, 1.4vw, 1rem);
+}
+
+.credito__card-bank img {
+  height: 20px;
   width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
+}
+
+.credito__card-brand img {
+  height: 22px;
+  width: auto;
+  max-width: 56px;
+  object-fit: contain;
+}
+
+.credito__card-bank--edit img,
+.credito__card-brand--edit img {
+  pointer-events: none;
+}
+
+.credito__card-tags {
+  position: absolute;
+  top: clamp(0.6rem, 1.2vw, 0.85rem);
+  right: clamp(0.6rem, 1.2vw, 0.85rem);
+  align-items: center;
+  gap: 0.35rem;
+  z-index: 2;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 60%;
+  display: none;
 }
 
 .credito__card-tag {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 0.2rem 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
   border-radius: 999px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.18);
   color: var(--color-cloud);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(6px);
 }
 
-.credito__card-body {
+.credito__card-tag--select {
+  padding-right: 0.4rem;
+}
+
+.credito__card-tag--select select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0;
+  cursor: pointer;
+}
+
+.credito__card-tag--add {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 3;
+}
+
+.credito__card-tag--add .fi {
+  font-size: 0.8rem;
+}
+
+.credito__card-info {
+  position: absolute;
+  left: clamp(0.8rem, 1.4vw, 1rem);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2xs);
+  gap: 0.35rem;
+  max-width: 70%;
 }
 
 .credito__card-label {
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 .credito__card-value {
@@ -147,27 +240,88 @@
   font-weight: var(--font-weight-medium);
 }
 
-.credito__card-meta {
-  display: flex;
-  justify-content: space-between;
+.credito__card-usage {
   font-size: var(--font-size-sm);
   opacity: 0.85;
+  display: inline-flex;
+  gap: 0.35rem;
 }
 
-.credito__card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.credito__card-usage span {
+  font-weight: var(--font-weight-semibold);
+}
+
+.credito__card-name,
+.credito__card-name-input {
+  position: absolute;
+  left: clamp(0.8rem, 1.4vw, 1rem);
+  bottom: clamp(0.8rem, 1.4vw, 1rem);
   font-size: var(--font-size-sm);
-  opacity: 0.85;
-}
-
-.credito__card-number {
-  letter-spacing: 0.16em;
-}
-
-.credito__card-bank-name {
   font-weight: var(--font-weight-medium);
+}
+
+.credito__card-name-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  color: inherit;
+  padding: 0.2rem 0;
+  width: min(220px, 60%);
+}
+
+.credito__card-name-input::placeholder,
+.credito__card-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.credito__card-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--font-weight-medium);
+  padding: 0.2rem 0;
+  width: min(210px, 68%);
+}
+
+.credito__card-select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.credito__card-select--overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.credito__card--empty {
+  border: none;
+  background: var(--color-blue-200);
+  box-shadow: none;
+  color: var(--color-blue-900);
+}
+
+.credito__card-empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+}
+
+.credito__card-empty .fi {
+  font-size: 1.3rem;
 }
 
 .credito__card--skin-aurora {
@@ -248,19 +402,92 @@
   --card-tone-3: var(--color-amber-700);
 }
 
-.credito__empty {
-  width: min(420px, 100%);
-  aspect-ratio: 1.586;
-  border-radius: var(--border-radius-xl);
-  border: 1px dashed color-mix(in srgb, var(--color-border) 70%, transparent);
+.credito__modal {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-black) 55%, transparent);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 40;
+}
+
+.credito__modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.credito__modal-card {
+  position: fixed;
+  left: var(--modal-origin-x, 50%);
+  top: var(--modal-origin-y, 50%);
+  width: var(--modal-origin-width, min(420px, 90vw));
+  height: var(--modal-origin-height, auto);
+  transition: transform 0.35s ease, left 0.35s ease, top 0.35s ease, opacity 0.2s ease;
+  transform: translate(0, 0) scale(1);
+  z-index: 41;
+}
+
+.credito__modal-card.is-open {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.credito__modal-actions {
+  position: fixed;
+  left: 50%;
+  top: calc(50% + (var(--modal-origin-height, 260px) / 2) + 20px);
+  transform: translateX(-50%) translateY(12px);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: var(--spacing-sm);
-  color: var(--color-muted);
-  text-align: center;
-  padding: var(--spacing-lg);
+  width: min(460px, 92vw);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.25s ease;
+  z-index: 41;
+}
+
+.credito__modal-actions.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.credito__action--select {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+  position: relative;
+}
+
+.credito__action-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.credito__action-value {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.credito__action-select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.credito__action--confirm {
+  flex: 0 0 auto;
+  touch-action: manipulation;
 }
 
 .credito__actions {
@@ -350,21 +577,6 @@
   line-height: 1;
 }
 
-.credito__register {
-  padding-top: var(--spacing-md);
-  border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
-}
-
-.credito__group {
-  padding-bottom: var(--spacing-2xs);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
-}
-
-.credito__select {
-  appearance: none;
-  background: transparent;
-}
-
 .app-shell[data-skin="clean"] .credito__actions--metaball .credito__actions-goo {
   display: none;
 }
@@ -386,9 +598,32 @@
   background: color-mix(in srgb, var(--color-surface) 85%, var(--color-accent-soft));
 }
 
+@media (min-width: 900px) {
+  .credito__card-wrap {
+    width: min(520px, 100%);
+  }
+
+  .credito__stack {
+    --card-stack-offset: 56px;
+  }
+}
+
 @media (max-width: 720px) {
-  .credito__card {
+  .credito__card-wrap {
     width: min(360px, 100%);
+  }
+
+  .credito__card-tag {
+    font-size: 0.65rem;
+  }
+
+  .credito__card-tag--add {
+    width: 38px;
+    height: 38px;
+  }
+
+  .credito__card-input {
+    width: min(180px, 70%);
   }
 
   .credito__actions {

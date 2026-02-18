@@ -1,8 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60" height="60" viewBox="11554 1891 60 60" fill="none"><g id="Type=Icon, Background=False_188">
-<rect width="60" height="60" transform="translate(11554 1891)" fill="white" />
-<g id="Group_411">
-<path id="Vector_2476" d="M11569.7 1902V1925.74L11583.6 1939.93L11590.7 1925.74H11597.7V1902H11569.7Z" fill="#009286" />
-<path id="Vector_2477" d="M11583.6 1939.93L11597.7 1925.74L11583.6 1911.46V1939.93Z" fill="#F3C000" />
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="11554 1891 60 60" fill="none"><g>
+<g>
+<path d="M11569.7 1902V1925.74L11583.6 1939.93L11590.7 1925.74H11597.7V1902H11569.7Z" fill="#009286" />
+<path d="M11583.6 1939.93L11597.7 1925.74L11583.6 1911.46V1939.93Z" fill="#F3C000" />
 </g>
 </g>
 </svg>
